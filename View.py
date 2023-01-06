@@ -3,7 +3,6 @@ import tkinter.font as tkfont
 from PIL import Image, ImageTk
 
 
-
 class View(Tk):
 
     def __init__(self, controller, model):
@@ -68,11 +67,13 @@ class View(Tk):
 
     def create_all_buttons(self):
         # New game
-        btn_new = Button(self.frame_top, text='New Game', font=self.default_style)  # nupp uus mäng
+        btn_new = Button(self.frame_top, text='New Game', font=self.default_style, command=self.controller.click_btn_new)  # nupp uus mäng
         Button(self.frame_top, text='Leaderboard', font=self.default_style).grid(row=0, column=1, padx=5, pady=2, sticky=EW)
         # cancel and send
-        btn_cancel = Button(self.frame_top, text='Cancel', font=self.default_style, state='disabled')  # nupp cancel
-        btn_send = Button(self.frame_top, text='Send', font=self.default_style, state='disabled')
+        btn_cancel = Button(self.frame_top, text='Cancel', font=self.default_style, state='disabled',
+                            command=self.controller.click_btn_cancel)  # nupp cancel
+        btn_send = Button(self.frame_top, text='Send', font=self.default_style,
+                          state='disabled', command=self.controller.click_btn_send)
         # place thre button on frame
         btn_new.grid(row=0, column=0, padx=5, pady=2, sticky=EW)
         btn_cancel.grid(row=0, column=2, padx=5, pady=2, sticky=EW)
@@ -102,8 +103,8 @@ class View(Tk):
 
         return char_input
 
-
-
-
-
+    def change_image(self, image_id):
+        self.image = ImageTk.PhotoImage(Image.open(self.model.image_files[image_id]))
+        self.label_image.configure(image=self.image)
+        self.label_image.image = self.image
 
