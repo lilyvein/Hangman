@@ -1,5 +1,8 @@
+from datetime import datetime
 import glob
 import sqlite3
+
+from Leaderboard import Leaderboard
 
 
 class Model:
@@ -62,3 +65,28 @@ class Model:
 
     def get_all_user_chars(self):
         return ', '.join(self.all_user_chars)
+
+    def set_player_name(self, name, seconds):
+        line = []
+        now = datetime.now().strftime('%Y-%m-%d %T')  # kella aeg T (h m s)
+        if name.strip():
+            self.player_name = name.strip()
+        line.append(now)  # Time
+        line.append(self.player_name)  # mängija nimi
+        line.append(self.new_word)  # sõna
+        line.append(self.get_all_user_chars())  # kõik valed tähed
+        line.append(str(seconds))  # Time in seconds
+
+        with open(self.leaderboard_file, 'a+', encoding='utf-8') as f:
+            f.write(';'.join(line) + '\n')
+
+    def read_leaderboard_file_contents(self):
+        self.score_data = []
+        empty_list = []
+        all_lines = open(self.leaderboard_file, 'r', encoding='utf-8').readlines()
+        for line in all_lines:
+            parts = line.strip().split(';')
+            empty_list.append(Leaderboard(parts[0], parts[1], parts[2], parts[3], int(parts[4])))
+        self.score_data = sorted(empty_list, key=lambda x: x.time, reverse=False)
+
+        return self.score_data
