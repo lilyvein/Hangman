@@ -30,4 +30,3 @@ class GameTime:
     def reset(self):
         self.counter = 0
         self.label_time['text'] = '0:00:00'
-

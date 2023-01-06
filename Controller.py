@@ -1,3 +1,5 @@
+from tkinter import simpledialog
+
 from GameTime import GameTime
 from Model import Model
 from View import View
@@ -22,7 +24,7 @@ class Controller:
         self.model.start_new_game()  # alustab uut mängu
         self.view.lbl_result.configure(text=self.model.user_word)
         self.view.lbl_error.configure(text='Wrong 0 letter(s)', fg='black')
-        self.view.char_input.focus() # active input filesd
+        self.view.char_input.focus()  # active input filesd
         self.gametime.reset()
         self.gametime.start()
 
@@ -54,15 +56,11 @@ class Controller:
             self.view.btn_cancel['state'] = 'disabled'
             self.view.btn_send['state'] = 'disabled'
             self.view.char_input['state'] = 'disabled'
+            player_name = simpledialog.askstring('Game over', 'What is the player\'s name', parent=self.view)  # kolm argumenti, tiitel ribal olev tekst ,2. tekst  3 kuhu peale panna, põhi mängu peale pannakse see aken
+            self.model.set_player_name(player_name, self.gametime.counter)
+            self.view.change_image(len(self.model.image_files) - 1)
 
-
-
-
-
-
-
-
-
-
-
-
+    def click_btn_leaderboard(self):
+        popup_window = self.view.create_popup_window()
+        data = self.model.read_leaderboard_file_contents()
+        self.view.generate_leaderboard(popup_window, data)

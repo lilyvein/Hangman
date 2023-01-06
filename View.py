@@ -1,18 +1,22 @@
+from datetime import datetime, timedelta
 from tkinter import *
-import tkinter.font as tkfont
+import tkinter.font as tkfont  # kirja stiilide import
+from tkinter import ttk
+
 from PIL import Image, ImageTk
 
 
 class View(Tk):
 
     def __init__(self, controller, model):
-        super().__init__()
+        super().__init__()   # selleks et saaks tk interit asju kasutada
         self.controller = controller
         self.model = model
         self.userinput = StringVar()
 
-        self.big_font_style = tkfont.Font(family='Courier', size=18, weight='bold')
-        self.default_style_bold = tkfont.Font(family='Verdana', size=10, weight='bold')
+        # Fonts
+        self.big_font_style = tkfont.Font(family='Courier', size=18, weight='bold')  # selle sõna fondi stiil mida arvama hakkatakse
+        self.default_style_bold = tkfont.Font(family='Verdana', size=10, weight='bold')  # vaikimisi stiil
         self.default_style = tkfont.Font(family='Verdana', size=10)
 
         # window properties
@@ -37,6 +41,7 @@ class View(Tk):
     @staticmethod
     def center(win):
         """
+        https://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter
         centers a tkinter window
         :param win: the main window or Toplevel window to center
         """
@@ -61,14 +66,14 @@ class View(Tk):
 
         # hangman image frame
         frame_img = Frame(frame_top, bg='white', width=130, height=130)
-        frame_img.grid(row=0, column=3, rowspan=4, padx=5, pady=5)
+        frame_img.grid(row=0, column=3, rowspan=4, padx=5, pady=5)  # rowspan ühendab 4 rida kokku
         # leatherboard create and place  once
         return frame_top, frame_bottom, frame_img   # meetod tagastab 3 asja
 
     def create_all_buttons(self):
         # New game
         btn_new = Button(self.frame_top, text='New Game', font=self.default_style, command=self.controller.click_btn_new)  # nupp uus mäng
-        Button(self.frame_top, text='Leaderboard', font=self.default_style).grid(row=0, column=1, padx=5, pady=2, sticky=EW)
+        Button(self.frame_top, text='Leaderboard', font=self.default_style, command=self.controller.click_btn_leaderboard).grid(row=0, column=1, padx=5, pady=2, sticky=EW)
         # cancel and send
         btn_cancel = Button(self.frame_top, text='Cancel', font=self.default_style, state='disabled',
                             command=self.controller.click_btn_cancel)  # nupp cancel
@@ -78,12 +83,12 @@ class View(Tk):
         btn_new.grid(row=0, column=0, padx=5, pady=2, sticky=EW)
         btn_cancel.grid(row=0, column=2, padx=5, pady=2, sticky=EW)
         btn_send.grid(row=1, column=2, padx=5, pady=2, sticky=EW)
-
+        # kutsun need nupud välja
         return btn_new, btn_cancel, btn_send
 
     def create_all_labels(self):
         Label(self.frame_top, text='Input letter', font=self.default_style_bold).grid(row=1, column=0, padx=5, pady=2)
-        lbl_error = Label(self.frame_top, text='Wrong 0 letter(s)', anchor='w', font=self.default_style_bold)  # siin näitab millised valed tähed on sisestatud
+        lbl_error = Label(self.frame_top, text='Wrong 0 letter(s)', anchor='w', font=self.default_style_bold)  # siin näitab millised valed tähed on sisestatud, anchor on selleks et ta kirjutaks vasakule poole serva
         lbl_time = Label(self.frame_top, text='0:00:00', font=self.default_style)
         lbl_result = Label(self.frame_bottom, text='Let\'s play'.upper(), font=self.big_font_style)  # upper teeb läbivalt trükitähtedega
 
@@ -108,3 +113,53 @@ class View(Tk):
         self.label_image.configure(image=self.image)
         self.label_image.image = self.image
 
+    def create_popup_window(self):
+        top = Toplevel(self)
+        top.geometry('500x180')
+        top.resizable(False, False)
+        top.grab_set()   # for madal window
+        top.focus()   # aken ise
+
+        frame = Frame(top)
+        frame.pack(expand=True, fill='both')
+        self.center(top)  # center on scree top window
+        return frame
+
+    def generate_leaderboard(self, frame, data):
+        # Tabel view
+        my_table = ttk.Treeview(frame)
+
+        # aknale vaja panna scroll bar vertikaalne paremale
+        vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
+        vsb.pack(side='right', fill='y')
+        my_table.configure(yscrollcommand=vsb.set)
+
+        # columns id
+        my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
+
+        # columns characteristics
+        my_table.column('#0', width=0, stretch=NO)
+        my_table.column('date_time', anchor=CENTER, width=90)
+        my_table.column('name', anchor=CENTER, width=90)
+        my_table.column('word', anchor=CENTER, width=90)
+        my_table.column('misses', anchor=CENTER, width=90)
+        my_table.column('game_time', anchor=CENTER, width=90)
+
+        # table column heading
+        my_table.heading('#0', text='', anchor=CENTER)
+        my_table.heading('date_time', text='Date', anchor=CENTER)
+        my_table.heading('name', text='Player',  anchor=CENTER)
+        my_table.heading('word', text='Word',  anchor=CENTER)
+        my_table.heading('misses', text='Wrong letters',  anchor=CENTER)
+        my_table.heading('game_time', text='Time',  anchor=CENTER)
+
+        # ADD DATA INTO TABELE
+        x = 0
+        for p in data:
+            # File format
+            dt = datetime.strptime(p.date, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %T')
+            my_table.insert(parent='', index='end', iid=str(x), text='', values=(dt, p.name, p.word, p.misses, str(timedelta(seconds=p.time))))
+
+            x += 1
+
+        my_table.pack(expand=True, fill=BOTH)

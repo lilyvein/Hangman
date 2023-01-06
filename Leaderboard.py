@@ -1,8 +1,8 @@
 class Leaderboard:
 
-    def __init__(self, date, dame, word, misses, time):
+    def __init__(self, date, name, word, misses, time):
+        self.date = date
+        self.name = name
         self.word = word
         self.misses = misses
-        self.dame = dame
-        self.date = date
         self.time = time
