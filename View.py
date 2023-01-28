@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from tkinter import *
-import tkinter.font as tkfont  # kirja stiilide import
+import tkinter.font as tkfont
 from tkinter import ttk
 
 from PIL import Image, ImageTk
@@ -9,14 +9,13 @@ from PIL import Image, ImageTk
 class View(Tk):
 
     def __init__(self, controller, model):
-        super().__init__()   # selleks et saaks tk interit asju kasutada
+        super().__init__()
         self.controller = controller
         self.model = model
         self.userinput = StringVar()
 
-        # Fonts
-        self.big_font_style = tkfont.Font(family='Courier', size=18, weight='bold')  # selle sõna fondi stiil mida arvama hakkatakse
-        self.default_style_bold = tkfont.Font(family='Verdana', size=10, weight='bold')  # vaikimisi stiil
+        self.big_font_style = tkfont.Font(family='Courier', size=18, weight='bold')
+        self.default_style_bold = tkfont.Font(family='Verdana', size=10, weight='bold')
         self.default_style = tkfont.Font(family='Verdana', size=10)
 
         # window properties
@@ -41,7 +40,6 @@ class View(Tk):
     @staticmethod
     def center(win):
         """
-        https://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter
         centers a tkinter window
         :param win: the main window or Toplevel window to center
         """
@@ -66,7 +64,7 @@ class View(Tk):
 
         # hangman image frame
         frame_img = Frame(frame_top, bg='white', width=130, height=130)
-        frame_img.grid(row=0, column=3, rowspan=4, padx=5, pady=5)  # rowspan ühendab 4 rida kokku
+        frame_img.grid(row=0, column=3, rowspan=4, padx=5, pady=5)
         # leatherboard create and place  once
         return frame_top, frame_bottom, frame_img   # meetod tagastab 3 asja
 
@@ -83,12 +81,12 @@ class View(Tk):
         btn_new.grid(row=0, column=0, padx=5, pady=2, sticky=EW)
         btn_cancel.grid(row=0, column=2, padx=5, pady=2, sticky=EW)
         btn_send.grid(row=1, column=2, padx=5, pady=2, sticky=EW)
-        # kutsun need nupud välja
+
         return btn_new, btn_cancel, btn_send
 
     def create_all_labels(self):
         Label(self.frame_top, text='Input letter', font=self.default_style_bold).grid(row=1, column=0, padx=5, pady=2)
-        lbl_error = Label(self.frame_top, text='Wrong 0 letter(s)', anchor='w', font=self.default_style_bold)  # siin näitab millised valed tähed on sisestatud, anchor on selleks et ta kirjutaks vasakule poole serva
+        lbl_error = Label(self.frame_top, text='Wrong 0 letter(s)', anchor='w', font=self.default_style_bold)  # siin näitab millised valed tähed on sisestatud
         lbl_time = Label(self.frame_top, text='0:00:00', font=self.default_style)
         lbl_result = Label(self.frame_bottom, text='Let\'s play'.upper(), font=self.big_font_style)  # upper teeb läbivalt trükitähtedega
 
