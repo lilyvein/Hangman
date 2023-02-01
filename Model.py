@@ -79,7 +79,7 @@ class Model:
     def set_player_name(self, name, seconds):
         line = []
         now = datetime.now().strftime('%Y-%m-%d %T')  # kella aeg T (h m s)
-        if name.strip():
+        if name is not None:  # name.strip():
             self.player_name = name.strip()
         line.append(now)  # Time
         line.append(self.player_name)  # mängija nimi
@@ -100,4 +100,3 @@ class Model:
         self.score_data = sorted(empty_list, key=lambda x: x.time, reverse=False)
 
         return self.score_data
-
