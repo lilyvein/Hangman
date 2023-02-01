@@ -128,24 +128,25 @@ class View(Tk):
 
     @staticmethod
     def generate_leaderboard(frame, data):
-        # Tabel view
-        my_table = ttk.Treeview(frame)
+        if len(data) > 0:
+            # Tabel view
+            my_table = ttk.Treeview(frame)
 
-        # aknale vaja panna scroll bar vertikaalne paremale
-        vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
-        vsb.pack(side='right', fill='y')
-        my_table.configure(yscrollcommand=vsb.set)
+            # aknale vaja panna scroll bar vertikaalne paremale
+            vsb = ttk.Scrollbar(frame, orient='vertical', command=my_table.yview)
+            vsb.pack(side='right', fill='y')
+            my_table.configure(yscrollcommand=vsb.set)
 
-        # columns id
-        my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
+            # columns id
+            my_table['columns'] = ('date_time', 'name', 'word', 'misses', 'game_time')
 
-        # columns characteristics
-        my_table.column('#0', width=0, stretch=NO)
-        my_table.column('date_time', anchor=CENTER, width=90)
-        my_table.column('name', anchor=CENTER, width=90)
-        my_table.column('word', anchor=CENTER, width=90)
-        my_table.column('misses', anchor=CENTER, width=90)
-        my_table.column('game_time', anchor=CENTER, width=90)
+            # columns characteristics
+            my_table.column('#0', width=0, stretch=NO)
+            my_table.column('date_time', anchor=CENTER, width=90)
+            my_table.column('name', anchor=CENTER, width=90)
+            my_table.column('word', anchor=CENTER, width=90)
+            my_table.column('misses', anchor=CENTER, width=90)
+            my_table.column('game_time', anchor=CENTER, width=90)
 
         # table column heading
         my_table.heading('#0', text='', anchor=CENTER)
