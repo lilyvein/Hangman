@@ -100,4 +100,3 @@ class Model:
         self.score_data = sorted(empty_list, key=lambda x: x.time, reverse=False)
 
         return self.score_data
-

@@ -1,14 +1,17 @@
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 
 from GameTime import GameTime
 from Model import Model
 from View import View
+from os import path
 
 
 class Controller:
 
-    def __init__(self):
+    def __init__(self, db_name=None):
         self.model = Model()
+        if db_name is not None:
+            self.model.database_name = db_name  # database file  changed
         self.view = View(self, self.model)
         self.gametime = GameTime(self.view.lbl_time)  # loob objekti et saame mängu aega kogu aeg kasutada
 
@@ -61,6 +64,9 @@ class Controller:
             self.view.change_image(len(self.model.image_files) - 1)
 
     def click_btn_leaderboard(self):
-        popup_window = self.view.create_popup_window()
-        data = self.model.read_leaderboard_file_contents()
-        self.view.generate_leaderboard(popup_window, data)
+        if path.exists(self.model.leaderboard_file) and path.isfile(self.model.leaderboard_file):
+            popup_window = self.view.create_popup_window()
+            data = self.model.read_leaderboard_file_contents()
+            self.view.generate_leaderboard(popup_window, data)
+        else:
+            messagebox.showwarning('Message', 'Leaderboardfile file is missing. \nPlay first!')
